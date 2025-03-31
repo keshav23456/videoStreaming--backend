@@ -3,7 +3,7 @@
 //improved 
 import dotenv from "dotenv"
 // import mongoose from "mongoose";
-// import { DB_NAME } from "./constants";
+// import { DB_NAME } from "../constants";
 dotenv.config({
     path: "./.env",
 })
@@ -29,6 +29,8 @@ connectDB()
 
 
 
+
+//index file polluted 
 /*
 import express from "express"
 const app = express()

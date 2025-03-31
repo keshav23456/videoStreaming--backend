@@ -3,11 +3,13 @@ const asyncHandler = (requestHandler) => {
     Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
   };
 };
-console.log("dem4")
+
 
 export { asyncHandler };
 
 //try catch
+//const asyncHandler = (fn) =>{async()=>{}}
+
 
 // const asyncHandler = (fn) => async(req,res,next) => {
 //     try {

@@ -1,6 +1,7 @@
 import mongoose,{Schema} from "mongoose";
+import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt'
-import { use } from "react";
+
 const userSchema = new Schema({
    
     username: {
@@ -52,7 +53,7 @@ const userSchema = new Schema({
 
 //userSchema.pre("save",function ()=> {})  //wong
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {//just phehle encrpt ho jaye(save in this case)
     if(!this.isModified("password")){return next()}
     this.password =  await bcrypt.hash(this.password,10)
     next()
@@ -60,12 +61,12 @@ userSchema.pre("save", async function (next) {
 
 })
 
-userSchema.method.isPasswordCorrect = async function (password){
+userSchema.methods.isPasswordCorrect = async function (password){//method bana lo guys
     return await bcrypt.compare(password,this.password) 
 }
 
-userSchema.method.generateAccessToken = function(){
-    jwt.sign( {
+userSchema.methods.generateAccessToken = function(){//async ki jarurat kam hi apdti hai
+    return jwt.sign( {//
         _id: this._id,
         email: this.email,
         username: this.username,
@@ -73,14 +74,14 @@ userSchema.method.generateAccessToken = function(){
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY//expiry in object 
     }
 )
 }
 
 
-userSchema.method.generateRefreshToken = function(){
-    jwt.sign( {
+userSchema.methods.generateRefreshToken = function(){
+    return jwt.sign( {
         _id: this._id
     },
     process.env.REFRESH_TOKEN_SECRET,
@@ -92,3 +93,5 @@ userSchema.method.generateRefreshToken = function(){
 
 
     export const User = mongoose.model("User",userSchema)
+
+    //MONGOOSE KE THRU BANA HAI SO DB SE DIRECT CONTACT KAREGA
